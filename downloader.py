@@ -31,6 +31,10 @@ def mp4_downloader(link, location):
 	command = "youtube-dl -o" + location + " " + link +" -c"
 	call(command.split(), shell=False)
 
+# youtube-dl --extract-audio --audio-format mp3 https://www.youtube.com/watch?v=6tz1_znrbmc
+def mp3_downloader(link, location):
+	command = "youtube-dl --extract-audio --audio-format mp3 --prefer-ffmpeg -o" + location + " " + link
+	call(command.split(), shell=False)
 
 link = get_youtube_link(query)
-mp4_downloader(link, '/home/saurabh/Downloads/Videos/video.mp4')
+mp3_downloader(link, '/home/saurabh/Downloads/Videos/tujkokk.%(ext)s')
