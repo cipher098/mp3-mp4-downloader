@@ -1,12 +1,14 @@
+import os
+
+import sys
 import re, urllib
 import pandas as pd
 from bs4 import BeautifulSoup
 from subprocess import call
 
-query = "tujko+jo+paaya+original+hd+youtube"
 
 def get_youtube_link(query):
-	site = urllib.request.urlopen("http://duckduckgo.com/html/?q="+query)
+	site = urllib.request.urlopen("http://duckduckgo.com/html/?q="+query+ '&t=hb&iax=1&ia=videos')
 	data = site.read()
 	soup = BeautifulSoup(data, "html.parser")
 
@@ -24,17 +26,65 @@ def get_youtube_link(query):
 
 	return ("https://" + result_url[0])
 
+
 def mp4_downloader(link, location):
-	import ipdb; ipdb.set_trace()
-	# command = "youtube-dl " + link +" -c"
-	# -o "~/Desktop/%(title)s.%(ext)s"
 	command = "youtube-dl -o" + location + " " + link +" -c"
 	call(command.split(), shell=False)
 
-# youtube-dl --extract-audio --audio-format mp3 https://www.youtube.com/watch?v=6tz1_znrbmc
+
 def mp3_downloader(link, location):
 	command = "youtube-dl --extract-audio --audio-format mp3 --prefer-ffmpeg -o" + location + " " + link
 	call(command.split(), shell=False)
 
-link = get_youtube_link(query)
-mp3_downloader(link, '/home/saurabh/Downloads/Videos/tujkokk.%(ext)s')
+
+def make_query(phrase):
+	query = phrase.strip()
+	query = query.replace("   ", " ")
+	query = query.replace("  ", " ")
+	query = query.replace(" ", "+")
+	query = query + "+official+song+hd+youtube"
+	return query	
+
+
+def get_input(input_list):
+	format = ''
+	phrase = ''
+	location = ''
+	for a in input_list[1:]:
+		if format == 'audio' or format == 'video':
+			if a[0] == '/':
+				location = a
+				break
+		elif a == '-a':
+			format = 'audio'
+		elif a == '-v':
+			format = 'video'	
+		else:
+			phrase = phrase + a + ' '
+
+
+	if not location:
+		location = os.environ['HOME'] + '/Downloads'
+
+	if location[-1] == '/':
+		location = location[0:-1]
+
+	if not format:
+		format = 'audio'
+	return (phrase, format, location)
+
+
+def main():
+	phrase, format, location = get_input(sys.argv)
+	query = make_query(phrase)
+	link = get_youtube_link(query)
+	# print(query, link)
+	# print (location)
+	if format == 'video':
+		mp4_downloader(link, location+'/%(title)s.%(ext)s')
+	else:
+		mp3_downloader(link, location+'/%(title)s.%(ext)s')
+
+
+if __name__ == "__main__":
+	main()
