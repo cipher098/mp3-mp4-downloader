@@ -1,6 +1,7 @@
 import re, urllib
 import pandas as pd
 from bs4 import BeautifulSoup
+from subprocess import call
 
 query = "tujko+jo+paaya+original+hd+youtube"
 
@@ -21,5 +22,15 @@ def get_youtube_link(query):
 		if result_url:
 			break
 
-	# import ipdb; ipdb.set_trace()
 	return ("https://" + result_url[0])
+
+def mp4_downloader(link, location):
+	import ipdb; ipdb.set_trace()
+	# command = "youtube-dl " + link +" -c"
+	# -o "~/Desktop/%(title)s.%(ext)s"
+	command = "youtube-dl -o" + location + " " + link +" -c"
+	call(command.split(), shell=False)
+
+
+link = get_youtube_link(query)
+mp4_downloader(link, '/home/saurabh/Downloads/Videos/video.mp4')
