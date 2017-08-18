@@ -17,6 +17,7 @@ if [ "${location:-0}" == 0 ];then
 	location=$HOME/Downloads/
 fi
 
+# Cannot download song without phrase.
 while [ "${song:-0}" == 0 ]
 do
 	read -p 'Phrase of song not given try again: ' song
