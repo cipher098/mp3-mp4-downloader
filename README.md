@@ -1,4 +1,6 @@
 # mp3-mp4-downloader
+With this you can download songs in mp3 or mp4 format by just telling small part of lyrics to it.
+
 Requirements - pip3 installed.
                 Python 3.4.1+
 
